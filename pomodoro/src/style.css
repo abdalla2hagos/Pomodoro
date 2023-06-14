@@ -1,0 +1,22 @@
+:root{
+  --ff-s: 'Space Mono', monospace;
+  --ff-r: 'Roboto Slab', serif;
+  --ff-k: 'Kumbh Sans', sans-serif;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  --fs-1-75: 1.75rem;
+  --fs-1-18: 1.18rem;
+
+  --clr-orange: hsl(0, 91%, 71%);
+  --clr-blue: hsl(182, 91%, 71%);
+  --clr-purple: hsl(284, 89%, 74%);
+  --clr-grey-1: hsl(227, 100%, 92%);
+  --clr-grey-2: hsl(229, 52%, 96%);
+  --clr-dark-blue-1: hsl(235, 35%, 18%);
+  --clr-dark-blue-2: hsl(234, 39%, 14%);
+  --clr-white: hsl(0, 0%, 100%);
+
+}

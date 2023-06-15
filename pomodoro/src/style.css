@@ -15,8 +15,24 @@
   --clr-purple: hsl(284, 89%, 74%);
   --clr-grey-1: hsl(227, 100%, 92%);
   --clr-grey-2: hsl(229, 52%, 96%);
-  --clr-dark-blue-1: hsl(235, 35%, 18%);
-  --clr-dark-blue-2: hsl(234, 39%, 14%);
+  --clr-dark-blue-1: hsl(234, 39%, 14%);
+  --clr-dark-blue-2: hsl(235, 35%, 18%);
   --clr-white: hsl(0, 0%, 100%);
+}
 
+body{
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: var(--ff-s);
+  background-color: var(--clr-dark-blue-2);
+}
+
+.nav__menu{
+  color: var(--clr-grey-1)
+}
+
+.main{
+  color: var(--clr-grey-2);
 }

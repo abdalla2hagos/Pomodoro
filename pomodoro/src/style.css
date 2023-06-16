@@ -36,3 +36,7 @@ body{
 .main{
   color: var(--clr-grey-2);
 }
+
+.header > *{
+  margin-block-end: 1em;
+}

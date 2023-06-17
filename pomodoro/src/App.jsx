@@ -8,15 +8,15 @@ import IconArrowDown from './assets/IconArrowDown'
 
 function App() {
   const [count, setCount] = useState(0)
-
+  
   return (
-    <>
+    <div className='wrapper'>
     <header className='header'>
-      <h1><Logo /></h1>
+      <h1 className='logo'><Logo /></h1>
 
       <nav>
         <ul className='nav__menu'>
-          <li>pomodoro</li>
+          <li className='isActive'>pomodoro</li>
           <li>short break</li>
           <li>long break</li>
         </ul>
@@ -105,7 +105,7 @@ function App() {
 
       <button>Apply</button>
     </dialog>
-    </>
+    </div>
   )
 }
 

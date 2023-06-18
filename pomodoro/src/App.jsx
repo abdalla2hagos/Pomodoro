@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Logo from './assets/logo'
 import IconSettings from './assets/IconSettings'
 import IconClose from './assets/IconClose'
@@ -7,7 +7,7 @@ import IconArrowDown from './assets/IconArrowDown'
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const modal = useRef()
   
   return (
     <div className='wrapper'>
@@ -16,49 +16,52 @@ function App() {
 
       <nav>
         <ul className='nav__menu'>
-          <li className='isActive'>pomodoro</li>
-          <li>short break</li>
-          <li>long break</li>
+          <li className='isActive nav__item'>pomodoro</li>
+          <li className='nav__item'>short break</li>
+          <li className='nav__item'>long break</li>
         </ul>
       </nav>
     </header>
 
     <main className='main'>
-      <time>00:00</time>
-      <p>RESTART</p>
+      <time className='main__time'>17:59</time>
+      <p className='main__timeStatus'>RESTART</p>
+      {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
+        <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />
+      </svg> */}
     </main>
 
-    <footer className='footer'>
+    <footer className='footer' onClick={()=> modal.current.showModal()}>
       <IconSettings />
     </footer>
 
-    <dialog>
-      <div className='flex--space'>
+    <dialog className='dialog' ref={modal}>
+      <div className='flex--between settings'>
         <h2 className='settings__title'>Settings</h2>
         <IconClose />
       </div>
 
-      <div>
-        <h3 className='time__title'>TIME (MINUTES)</h3>
+      <div className='timeContainer'>
+        <h3 className='timeTitle'>TIME (MINUTES)</h3>
 
         <div>
-          <div className='flex--space'>
-            <p>pomodoro</p>
+          <div className='flex--between timeEditContainer'>
+            <p className='timeEditTitle'>pomodoro</p>
 
-            <div>
+            <div className='flex--between timeEdit'>
               <p>25</p>
 
-              <div>
+              <div className='arrowContainer'>
                 <IconArrowUp />
                 <IconArrowDown />
               </div>
             </div>
           </div>
 
-          <div>
-            <p>short break</p>
+          <div className='flex--between timeEditContainer'>
+            <p className='timeEditTitle'>short break</p>
 
-            <div>
+            <div className='flex--between timeEdit'>
               <p>5</p>
 
               <div>
@@ -68,10 +71,10 @@ function App() {
             </div>
           </div>
 
-          <div>
-            <p>long break</p>
+          <div className='flex--between'>
+            <p className='timeEditTitle'>long break</p>
 
-            <div>
+            <div className='flex--between timeEdit'>
               <p>15</p>
 
               <div>
@@ -83,7 +86,7 @@ function App() {
         </div>
       </div>
 
-      <div className='flex--space'>
+      <div className='flex fontContainer'>
         <h3>FONT</h3>
 
         <div>
@@ -93,7 +96,7 @@ function App() {
         </div>
       </div>
 
-      <div className='flex--space'>
+      <div className='flex'>
         <h3>COLOR</h3>
 
         <div>

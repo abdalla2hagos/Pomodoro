@@ -4,6 +4,7 @@ import IconSettings from './assets/IconSettings'
 import IconClose from './assets/IconClose'
 import IconArrowUp from './assets/IconArrowUp'
 import IconArrowDown from './assets/IconArrowDown'
+import CheckMark from './assets/CheckMark'
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
 
       <nav>
         <ul className='nav__menu'>
-          <li className='isActive nav__item'>pomodoro</li>
+          <li className='isActiveTab nav__item'>pomodoro</li>
           <li className='nav__item'>short break</li>
           <li className='nav__item'>long break</li>
         </ul>
@@ -38,7 +39,7 @@ function App() {
     <dialog className='dialog' ref={modal}>
       <div className='flex--between settings'>
         <h2 className='settings__title'>Settings</h2>
-        <IconClose />
+        <button className='iconClose'><IconClose /></button>
       </div>
 
       <div className='timeContainer'>
@@ -89,24 +90,24 @@ function App() {
       <div className='flex fontContainer'>
         <h3>FONT</h3>
 
-        <div>
-          <button>Aa</button>
-          <button>Aa</button>
-          <button>Aa</button>
+        <div className='fontButtonContainer'>
+          <button className='fontButton attr isActiveFont'>Aa</button>
+          <button className='fontButton attr'>Aa</button>
+          <button className='fontButton attr'>Aa</button>
         </div>
       </div>
 
-      <div className='flex'>
+      <div className='flex clrContainer'>
         <h3>COLOR</h3>
 
         <div>
-          <button>orange</button>
-          <button>blue</button>
-          <button>purple</button>
+          <button className='clrButton attr'><CheckMark/></button>
+          <button className='clrButton attr'></button>
+          <button className='clrButton attr'></button>
         </div>
       </div>
 
-      <button>Apply</button>
+      <button className='Apply'>Apply</button>
     </dialog>
     </div>
   )

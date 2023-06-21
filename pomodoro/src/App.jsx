@@ -4,7 +4,6 @@ import IconSettings from './assets/IconSettings'
 import IconClose from './assets/IconClose'
 import IconArrowUp from './assets/IconArrowUp'
 import IconArrowDown from './assets/IconArrowDown'
-import CheckMark from './assets/CheckMark'
 
 
 function App() {
@@ -37,19 +36,19 @@ function App() {
     </footer>
 
     <dialog className='dialog' ref={modal}>
-      <div className='flex--between settings'>
+      <div className='flex--center settings'>
         <h2 className='settings__title'>Settings</h2>
-        <button className='iconClose'><IconClose /></button>
+        <button className='iconClose' onClick={()=> modal.current.close()}><IconClose /></button>
       </div>
 
       <div className='timeContainer'>
         <h3 className='timeTitle'>TIME (MINUTES)</h3>
 
-        <div>
+        <div className='flexContainer'>
           <div className='flex--between timeEditContainer'>
             <p className='timeEditTitle'>pomodoro</p>
 
-            <div className='flex--between timeEdit'>
+            <div className='flex--center timeEdit'>
               <p>25</p>
 
               <div className='arrowContainer'>
@@ -62,7 +61,7 @@ function App() {
           <div className='flex--between timeEditContainer'>
             <p className='timeEditTitle'>short break</p>
 
-            <div className='flex--between timeEdit'>
+            <div className='flex--center timeEdit'>
               <p>5</p>
 
               <div>
@@ -75,7 +74,7 @@ function App() {
           <div className='flex--between'>
             <p className='timeEditTitle'>long break</p>
 
-            <div className='flex--between timeEdit'>
+            <div className='flex--center timeEdit'>
               <p>15</p>
 
               <div>
@@ -101,13 +100,13 @@ function App() {
         <h3>COLOR</h3>
 
         <div>
-          <button className='clrButton attr'><CheckMark/></button>
+          <button className='clrButton attr isActiveColor'></button>
           <button className='clrButton attr'></button>
           <button className='clrButton attr'></button>
         </div>
       </div>
 
-      <button className='Apply'>Apply</button>
+      <button className='apply'>Apply</button>
     </dialog>
     </div>
   )

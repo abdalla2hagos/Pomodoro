@@ -88,7 +88,7 @@ button{
 /* main start */
 .main,
 .circleContainer{
-  padding: 5rem 3rem;
+  padding: 10rem 10rem;
   border-radius: 50%;
 }
 
@@ -112,9 +112,13 @@ button{
 
 .main__time{
   font-size: var(--fs-4);
+  position: absolute;
+  transform: translate(-50%, -50%);
 }
 
 .main__timeStatus{
+  position: absolute;
+  transform: translate(-50%, 2.3rem);
   margin-block-start: 0.5rem;
   letter-spacing: 0.5ch;
   font-size: var(--fs-1-5);
@@ -159,7 +163,8 @@ button{
   background: rgba(0, 0, 0, 0.5 );
 }
 
-.flex--between{
+.flex--between,
+.flex--center{
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -179,15 +184,15 @@ button{
   background-color: transparent;
 }
 
-/* .settings__title::before{
+.settings__title::before{
   content: '';
   position: absolute;
   background-color: hsla(var(--clr-dark-blue-1), 0.1);
   left: 0;
   right: 0;
-  bottom: 83%;
+  bottom: 87%;
   height: 0.1rem;
-} */
+}
 
 .timeTitle{
   letter-spacing: 0.5ch;
@@ -201,7 +206,7 @@ button{
 }
 
 .timeEdit{
-  width: 5rem;
+  width: 8rem;
   background-color: hsl(var(--clr-grey-2));
   padding: 0.4em 0.7em;
   border-radius: 0.5rem;
@@ -246,16 +251,23 @@ button{
   margin-block-end: 2rem;
 }
 
-/* .fontContainer::before{
+.fontContainer::before,
+.fontContainer::after{
   content: '';
   position: absolute;
   background-color: hsla(var(--clr-dark-blue-1), 0.1);
-  left: 0;
-  right: 0;
-  bottom: 36%;
-  height: 0.1rem; */
-/* } */
+  left: 5%;
+  right: 5%;
+  height: 0.1rem; 
+}
 
+.fontContainer::before{
+  bottom: 48%;
+}
+
+.fontContainer::after{
+  bottom: 26%;
+}
 
 .fontButton:nth-child(1){
   font-family: var(--ff-s);
@@ -270,9 +282,18 @@ button{
 }
 
 .fontButton{
+  position: relative;
   background-color: hsl(var(--clr-grey-2));
   color: hsl(var(--clr-dark-blue-1));
   padding: 0.4em 0.5rem;
+}
+
+.fontButton:hover::before{
+  content: '';
+  position: absolute;
+  inset: -5% -8% -5% -5%;
+  border-radius: 50%;
+  border: 1px solid hsl(var(--clr-grey-1))
 }
 
 .isActiveFont.fontButton{
@@ -304,20 +325,76 @@ button{
   padding: 1.1em 1.1em;
 }
 
+.isActiveColor{
+  position: relative;
+}
+
+.isActiveColor::before{
+  content: '✔️';
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
 .fontContainer h3,
 .clrContainer h3{
   margin-block-end: 1rem;
 }
 
-.Apply{
+.apply{
   position: absolute;
   transform: translateX(-46%);
   bottom: -1.5rem;
   font-weight: var(--fw-medium);
-  color: hsl(var(--clr-dark-blue-1));
+  color: hsl(var(--clr-white));
   background-color: hsl(var(--clr-orange));
   border: 0;
   border-radius: 100rem;
   padding: 0.8em 2.4em;
 }
+
+.apply:hover{
+  --clr-orange: 0, 91%, 77%;
+  background-color: hsl(var(--clr-orange));
+}
 /* modal end */
+
+@media(min-width: 900px){
+  .dialog{
+    width: 50%;
+  }
+
+  .flex--between{
+    flex-direction: column;
+    align-items: normal;
+    justify-content: flex-start;
+  }
+
+  .flexContainer{
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .flex{
+    flex-direction: row;
+    justify-content: space-between;
+    /* align-items: flex-start; */
+  }
+
+  .fontButton{
+    vertical-align: top;
+  }
+  .settings__title::before{
+    bottom: 85%;
+  }
+
+  .fontContainer::before{
+    bottom: 55%;
+  }
+  
+  .fontContainer::after{
+    bottom: 30%;
+  }
+}
+
+

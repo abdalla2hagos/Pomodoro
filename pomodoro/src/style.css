@@ -113,12 +113,12 @@ button{
 .main__time{
   font-size: var(--fs-4);
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -65%);
 }
 
 .main__timeStatus{
   position: absolute;
-  transform: translate(-50%, 2.3rem);
+  transform: translate(-50%, 1.8rem);
   margin-block-start: 0.5rem;
   letter-spacing: 0.5ch;
   font-size: var(--fs-1-5);
@@ -221,6 +221,9 @@ button{
 .arrowDown{
   display: block;
   cursor: pointer;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .arrowUp{
@@ -360,7 +363,7 @@ button{
 
 @media(min-width: 900px){
   .dialog{
-    width: 50%;
+    width: 30%;
   }
 
   .flex--between{
@@ -378,7 +381,6 @@ button{
   .flex{
     flex-direction: row;
     justify-content: space-between;
-    /* align-items: flex-start; */
   }
 
   .fontButton{
@@ -389,11 +391,11 @@ button{
   }
 
   .fontContainer::before{
-    bottom: 55%;
+    bottom: 47%;
   }
   
   .fontContainer::after{
-    bottom: 30%;
+    bottom: 27%;
   }
 }
 

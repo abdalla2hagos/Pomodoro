@@ -8,6 +8,39 @@ import IconArrowDown from './assets/IconArrowDown'
 
 function App() {
   const modal = useRef()
+  const [time, SetTime] = useState([{
+    pomodoro: 25,
+    shortBreak: 5,
+    longBreak: 15
+  }])
+  const [timer, setTimer] = useState([])
+
+  function increasePomodoro(){
+    SetTime(prev => prev.map(time => {
+      return {
+        ...time, pomodoro: time.pomodoro + 1
+      }
+    }))
+  }
+
+  function DecreasePomodoro(){
+    SetTime(prev => prev.map(time => {
+      return {
+        ...time, pomodoro: time.pomodoro <= 1 ? 1 : time.pomodoro - 1 
+      }
+    }))
+  }
+
+  function applyChanges(){
+    setTimer(prev => {
+      const updatedArray = [...prev]
+      updatedArray.push(time.map(time=>time.pomodoro))
+      if(updatedArray.length > 1){
+        updatedArray.shift()
+      }
+      return updatedArray
+    })
+  }
   
   return (
     <div className='wrapper'>
@@ -24,7 +57,7 @@ function App() {
     </header>
 
     <main className='main'>
-      <time className='main__time'>17:59</time>
+      <time className='main__time'>{timer}</time>
       <p className='main__timeStatus'>RESTART</p>
       {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
         <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />
@@ -49,11 +82,11 @@ function App() {
             <p className='timeEditTitle'>pomodoro</p>
 
             <div className='flex--center timeEdit'>
-              <p>25</p>
+              <p>{time.map(time => time.pomodoro)}</p>
 
               <div className='arrowContainer'>
-                <IconArrowUp />
-                <IconArrowDown />
+                <IconArrowUp increasePomodoro={()=> increasePomodoro()}/>
+                <IconArrowDown DecreasePomodoro={()=> DecreasePomodoro()}/>
               </div>
             </div>
           </div>
@@ -106,7 +139,7 @@ function App() {
         </div>
       </div>
 
-      <button className='apply'>Apply</button>
+      <button className='apply' onClick={()=> {applyChanges(); modal.current.close();}}>Apply</button>
     </dialog>
     </div>
   )

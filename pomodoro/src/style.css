@@ -44,6 +44,8 @@ body{
 button{
   cursor: pointer;
 }
+
+
 /* global end */
 .header{
   margin-block-end: 3rem
@@ -63,6 +65,8 @@ button{
 }
 
 .nav__item{
+  border: 0;
+  background-color: pink;
   cursor: pointer;
   font-weight: var(--fw-bold);
 }

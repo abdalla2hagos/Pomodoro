@@ -11,6 +11,12 @@ function App() {
   const longBreak = 'long break'
   const shortBreak = 'short break'
 
+  const styles = {
+    'isActiveTab::before': {
+      'background-color': 'hsl(var(--clr-orange))'
+    }
+  }
+
   const modal = useRef()
   const [time, setTime] = useState([{
     type: pomodoro,
@@ -28,6 +34,7 @@ function App() {
   const [timer, setTimer] = useState('')
   const [activeMode, setActiveMode] = useState(pomodoro)
   const [activeFont, setActiveFont] = useState('monospace')
+  const [activeColor, setActiveColor] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
   
   useEffect(()=>{
@@ -59,8 +66,8 @@ function App() {
   }
 
   function changeMode(e){
+    // if(!e.target.closest('.nav__item')) return
     setActiveMode(e.target.dataset.name)
-    setActiveFont(e.target.dataset.name)
     setTime(prev => prev.map(item =>{
       if(item.type === e.target.dataset.name){
         return{
@@ -72,6 +79,15 @@ function App() {
         }
       }
     }))
+  }
+
+  function changeFont(e){
+    
+  }
+
+  function changeColor(e){
+    if(!e.target.closest('.clrButton')) return
+    setActiveColor(e.target.dataset.color)
   }
 
   return (
@@ -154,20 +170,20 @@ function App() {
       <div className='flex fontContainer'>
         <h3>FONT</h3>
 
-        <div className='fontButtonContainer' onClick={changeMode}>
-          <button className={`fontButton attr ${activeFont === 'monospace' ? 'isActiveFont' : ''}`} data-name='monospace'>Aa</button>
-          <button className={`fontButton attr ${activeFont === 'sans-serif' ? 'isActiveFont' : ''}`} data-name='sans-serif'>Aa</button>
-          <button className={`fontButton attr ${activeFont === 'serif' ? 'isActiveFont' : ''}`} data-name='serif'>Aa</button>
+        <div className='fontButtonContainer' onClick={changeFont}>
+          <button className={`fontButton attr ${activeFont === 'monospace' ? 'isActiveFont' : ''}`} data-font='monospace'>Aa</button>
+          <button className={`fontButton attr ${activeFont === 'sans-serif' ? 'isActiveFont' : ''}`} data-font='sans-serif'>Aa</button>
+          <button className={`fontButton attr ${activeFont === 'serif' ? 'isActiveFont' : ''}`} data-font='serif'>Aa</button>
         </div>
       </div>
 
       <div className='flex clrContainer'>
         <h3>COLOR</h3>
 
-        <div>
-          <button className='clrButton attr isActiveColor'></button>
-          <button className='clrButton attr'></button>
-          <button className='clrButton attr'></button>
+        <div onClick={changeColor}> 
+          <button className={`clrButton attr ${activeColor === 'orange' ? 'isActiveColor' : ''}`} data-color = 'orange'></button>
+          <button className={`clrButton attr ${activeColor === 'purple' ? 'isActiveColor' : ''}`} data-color = 'purple'></button>
+          <button className={`clrButton attr ${activeColor === 'blue' ? 'isActiveColor' : ''}`} data-color = 'blue'></button>
         </div>
       </div>
 

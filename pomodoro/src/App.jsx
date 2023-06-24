@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Logo from './assets/logo'
 import IconSettings from './assets/IconSettings'
 import IconClose from './assets/IconClose'
@@ -7,51 +7,83 @@ import IconArrowDown from './assets/IconArrowDown'
 
 
 function App() {
+  const pomodoro = 'pomodoro'
+  const longBreak = 'long break'
+  const shortBreak = 'short break'
+
   const modal = useRef()
-  const [time, SetTime] = useState([{
-    pomodoro: 25,
-    shortBreak: 5,
-    longBreak: 15
+  const [time, setTime] = useState([{
+    type: pomodoro,
+    duration: 25,
+    isActive: true
+  },{
+    type: shortBreak,
+    duration: 5,
+    isActive: false
+  },{
+    type: longBreak,
+    duration: 15,
+    isActive: false
   }])
-  const [timer, setTimer] = useState([])
-
-  function increasePomodoro(){
-    SetTime(prev => prev.map(time => {
-      return {
-        ...time, pomodoro: time.pomodoro + 1
-      }
-    }))
-  }
-
-  function DecreasePomodoro(){
-    SetTime(prev => prev.map(time => {
-      return {
-        ...time, pomodoro: time.pomodoro <= 1 ? 1 : time.pomodoro - 1 
-      }
-    }))
-  }
-
-  function applyChanges(){
-    setTimer(prev => {
-      const updatedArray = [...prev]
-      updatedArray.push(time.map(time=>time.pomodoro))
-      if(updatedArray.length > 1){
-        updatedArray.shift()
-      }
-      return updatedArray
-    })
-  }
+  const [timer, setTimer] = useState('')
+  const [activeMode, setActiveMode] = useState(pomodoro)
+  const [activeFont, setActiveFont] = useState('monospace')
+  const [tempTime, setTempTime] = useState(time)
   
+  useEffect(()=>{
+    const activeTime = time.find(item => item.isActive)
+    if (activeTime) {
+      setTimer(activeTime.duration)
+    }
+  },[time])
+
+  function increaseTime(type){
+    setTempTime(prev => prev.map(item => {
+      if(item.type === type)
+      return {
+        ...item, duration: item.duration + 1
+      }
+      return item
+    }))
+  }
+
+  function decreaseTime(type){
+    setTempTime(prev => prev.map(item => {
+      if(item.type === type){
+        return {
+          ...item, duration: item.duration <= 1 ? 1 : item.duration - 1 
+        }
+      }
+      return item
+    }))
+  }
+
+  function changeMode(e){
+    setActiveMode(e.target.dataset.name)
+    setActiveFont(e.target.dataset.name)
+    setTime(prev => prev.map(item =>{
+      if(item.type === e.target.dataset.name){
+        return{
+          ...item, isActive: item.isActive = true
+        }
+      }else{
+        return{
+          ...item, isActive: item.isActive = false
+        }
+      }
+    }))
+  }
+
   return (
     <div className='wrapper'>
     <header className='header'>
       <h1 className='logo'><Logo /></h1>
 
       <nav>
-        <ul className='nav__menu'>
-          <li className='isActiveTab nav__item'>pomodoro</li>
-          <li className='nav__item'>short break</li>
-          <li className='nav__item'>long break</li>
+        <ul className='nav__menu' onClick={changeMode}>
+          <li className={`nav__item' ${activeMode === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
+          <li className={`'nav__item' ${activeMode === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
+          <li className={`'nav__item' ${activeMode === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
         </ul>
       </nav>
     </header>
@@ -82,11 +114,11 @@ function App() {
             <p className='timeEditTitle'>pomodoro</p>
 
             <div className='flex--center timeEdit'>
-              <p>{time.map(time => time.pomodoro)}</p>
+              <p>{tempTime[0].duration}</p>
 
               <div className='arrowContainer'>
-                <IconArrowUp increasePomodoro={()=> increasePomodoro()}/>
-                <IconArrowDown DecreasePomodoro={()=> DecreasePomodoro()}/>
+                <IconArrowUp increaseTime={()=> increaseTime(pomodoro)}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime(pomodoro)}/>
               </div>
             </div>
           </div>
@@ -95,11 +127,11 @@ function App() {
             <p className='timeEditTitle'>short break</p>
 
             <div className='flex--center timeEdit'>
-              <p>5</p>
+              <p>{tempTime[1].duration}</p>
 
               <div>
-                <IconArrowUp />
-                <IconArrowDown />
+                <IconArrowUp increaseTime={()=> increaseTime(shortBreak)}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime(shortBreak)}/>
               </div>
             </div>
           </div>
@@ -108,11 +140,11 @@ function App() {
             <p className='timeEditTitle'>long break</p>
 
             <div className='flex--center timeEdit'>
-              <p>15</p>
+              <p>{tempTime[2].duration}</p>
 
               <div>
-                <IconArrowUp />
-                <IconArrowDown />
+                <IconArrowUp increaseTime={()=> increaseTime(longBreak)}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime(longBreak)}/>
               </div>
             </div>
           </div>
@@ -122,10 +154,10 @@ function App() {
       <div className='flex fontContainer'>
         <h3>FONT</h3>
 
-        <div className='fontButtonContainer'>
-          <button className='fontButton attr isActiveFont'>Aa</button>
-          <button className='fontButton attr'>Aa</button>
-          <button className='fontButton attr'>Aa</button>
+        <div className='fontButtonContainer' onClick={changeMode}>
+          <button className={`fontButton attr ${activeFont === 'monospace' ? 'isActiveFont' : ''}`} data-name='monospace'>Aa</button>
+          <button className={`fontButton attr ${activeFont === 'sans-serif' ? 'isActiveFont' : ''}`} data-name='sans-serif'>Aa</button>
+          <button className={`fontButton attr ${activeFont === 'serif' ? 'isActiveFont' : ''}`} data-name='serif'>Aa</button>
         </div>
       </div>
 
@@ -139,7 +171,7 @@ function App() {
         </div>
       </div>
 
-      <button className='apply' onClick={()=> {applyChanges(); modal.current.close();}}>Apply</button>
+      <button className='apply' onClick={()=> {setTime(tempTime); modal.current.close();}}>Apply</button>
     </dialog>
     </div>
   )

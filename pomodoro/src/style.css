@@ -68,6 +68,8 @@ button{
 }
 
 .isActiveTab{
+  color: hsl(var(--clr-dark-blue-1));
+  font-weight: var(--fw-bold);
   position: relative;
   isolation: isolate;
 }
@@ -79,10 +81,6 @@ button{
   inset: -0.8rem -0.5rem;
   background-color: hsl(var(--clr-blue));
   border-radius: 100rem;
-}
-
-.isActiveTab.nav__item{
-  color: hsl(var(--clr-dark-blue-1));
 }
 /* header end */
 /* main start */

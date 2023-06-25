@@ -31,18 +31,34 @@ function App() {
     duration: 15,
     isActive: false
   }])
-  const [timer, setTimer] = useState('')
+  const [displayedTime, setDisplayedTime] = useState()
   const [activeMode, setActiveMode] = useState(pomodoro)
   const [activeFont, setActiveFont] = useState('monospace')
   const [activeColor, setActiveColor] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
+  const [isTimeRunning, setIsTimeRunning] = useState(false)
   
   useEffect(()=>{
     const activeTime = time.find(item => item.isActive)
     if (activeTime) {
-      setTimer(activeTime.duration)
+      setDisplayedTime(activeTime.duration)
     }
-  },[time])
+
+    if(isTimeRunning & displayedTime > 1){
+      setTimeout(()=>{
+        setTime(prev => prev.map(item=>{
+          if(item.isActive){
+            return {
+              ...item, duration: item.duration - 1
+            }
+          }
+          return item
+        }))
+      },1000)
+    } else if(displayedTime === 0){
+      setIsTimeRunning(false)
+    }
+  },[isTimeRunning, time])
 
   function increaseTime(type){
     setTempTime(prev => prev.map(item => {
@@ -65,7 +81,7 @@ function App() {
     }))
   }
 
-  function changeMode(e){
+  function selectTap(e){
     // if(!e.target.closest('.nav__item')) return
     setActiveMode(e.target.dataset.name)
     setTime(prev => prev.map(item =>{
@@ -79,8 +95,18 @@ function App() {
         }
       }
     }))
+    // pauses time 
+    setIsTimeRunning(false)
+    // reset time when tap is clicked
+    setTimeout(() => {
+      setTime(prev => prev.map(item =>{
+        return{
+          ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
+        }
+      }))
+    }, 1000);
   }
-
+  console.log(tempTime.filter(item=>item.isActive).map(item=>item.duration))
   function changeFont(e){
     
   }
@@ -89,14 +115,17 @@ function App() {
     if(!e.target.closest('.clrButton')) return
     setActiveColor(e.target.dataset.color)
   }
-
+ 
+  function startPause(){
+    setIsTimeRunning(prev => !prev)
+  }
   return (
     <div className='wrapper'>
     <header className='header'>
       <h1 className='logo'><Logo /></h1>
 
       <nav>
-        <ul className='nav__menu' onClick={changeMode}>
+        <ul className='nav__menu' onClick={selectTap}>
           <li className={`nav__item' ${activeMode === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
           <li className={`'nav__item' ${activeMode === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
           <li className={`'nav__item' ${activeMode === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
@@ -104,8 +133,8 @@ function App() {
       </nav>
     </header>
 
-    <main className='main'>
-      <time className='main__time'>{timer}</time>
+    <main className='main' onClick={startPause}>
+      <time className='main__time'>{displayedTime}</time>
       <p className='main__timeStatus'>RESTART</p>
       {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
         <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />

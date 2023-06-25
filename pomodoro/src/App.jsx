@@ -31,12 +31,14 @@ function App() {
   const [activeColor, setActiveColor] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
-  
+  const activeTime = tempTime.find(item => item.isActive)
+
   useEffect(()=>{
     const activeTime = time.find(item => item.isActive)
     if (activeTime) {
       setDisplayedTime(activeTime.duration)
     }
+    console.log(activeTime)
 
     if(isTimeRunning & displayedTime > 1){
       setTimeout(()=>{
@@ -94,7 +96,7 @@ function App() {
     setIsTimeRunning(false)
 
   }
-  console.log(tempTime)
+  
   function startPause(){
     setIsTimeRunning(prev => !prev)
   }
@@ -119,6 +121,14 @@ function App() {
     }))
   }
 
+  function reset(){
+    const activeTime = time.find(item => item.isActive)
+    if (activeTime) {
+      setDisplayedTime(activeTime.duration)
+    }
+    isTimeRunning(false)
+  }
+
   return (
     <div className='wrapper'>
     <header className='header'>
@@ -135,7 +145,7 @@ function App() {
 
     <main className='main' onClick={startPause}>
       <time className='main__time'>{displayedTime}</time>
-      <p className='main__timeStatus'>RESTART</p>
+      <p className='main__timeStatus'>{isTimeRunning ? 'PAUSE' : 'RESTART'}</p>
       {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
         <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />
       </svg> */}
@@ -218,6 +228,7 @@ function App() {
 
       <button className='apply' onClick={applyChanges}>Apply</button>
     </dialog>
+    <button onClick={reset}>Reset</button>
     </div>
   )
 }

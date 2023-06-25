@@ -11,12 +11,6 @@ function App() {
   const longBreak = 'long break'
   const shortBreak = 'short break'
 
-  const styles = {
-    'isActiveTab::before': {
-      'background-color': 'hsl(var(--clr-orange))'
-    }
-  }
-
   const modal = useRef()
   const [time, setTime] = useState([{
     type: pomodoro,
@@ -32,7 +26,7 @@ function App() {
     isActive: false
   }])
   const [displayedTime, setDisplayedTime] = useState()
-  const [activeMode, setActiveMode] = useState(pomodoro)
+  const [activeTap, setActiveTap] = useState(pomodoro)
   const [activeFont, setActiveFont] = useState('monospace')
   const [activeColor, setActiveColor] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
@@ -83,9 +77,10 @@ function App() {
 
   function selectTap(e){
     // if(!e.target.closest('.nav__item')) return
-    setActiveMode(e.target.dataset.name)
+    const selectedType = e.target.dataset.name
+    setActiveTap(selectedType)
     setTime(prev => prev.map(item =>{
-      if(item.type === e.target.dataset.name){
+      if(item.type === selectedType){
         return{
           ...item, isActive: item.isActive = true
         }
@@ -95,18 +90,15 @@ function App() {
         }
       }
     }))
-    // pauses time 
+    // pauses timer 
     setIsTimeRunning(false)
-    // reset time when tap is clicked
-    setTimeout(() => {
-      setTime(prev => prev.map(item =>{
-        return{
-          ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
-        }
-      }))
-    }, 1000);
+
   }
-  console.log(tempTime.filter(item=>item.isActive).map(item=>item.duration))
+  console.log(tempTime)
+  function startPause(){
+    setIsTimeRunning(prev => !prev)
+  }
+
   function changeFont(e){
     
   }
@@ -116,9 +108,17 @@ function App() {
     setActiveColor(e.target.dataset.color)
   }
  
-  function startPause(){
-    setIsTimeRunning(prev => !prev)
+  function applyChanges(){
+    modal.current.close()
+    setTime(tempTime) 
+    isTimeRunning(false)
+    setTime(prev => prev.map(item =>{
+      return{
+        ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
+      }
+    }))
   }
+
   return (
     <div className='wrapper'>
     <header className='header'>
@@ -126,9 +126,9 @@ function App() {
 
       <nav>
         <ul className='nav__menu' onClick={selectTap}>
-          <li className={`nav__item' ${activeMode === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
-          <li className={`'nav__item' ${activeMode === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
-          <li className={`'nav__item' ${activeMode === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
+          <li className={`nav__item' ${activeTap === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
+          <li className={`'nav__item' ${activeTap === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
+          <li className={`'nav__item' ${activeTap === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
         </ul>
       </nav>
     </header>
@@ -216,7 +216,7 @@ function App() {
         </div>
       </div>
 
-      <button className='apply' onClick={()=> {setTime(tempTime); modal.current.close();}}>Apply</button>
+      <button className='apply' onClick={applyChanges}>Apply</button>
     </dialog>
     </div>
   )

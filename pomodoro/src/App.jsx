@@ -4,56 +4,66 @@ import IconSettings from './assets/IconSettings'
 import IconClose from './assets/IconClose'
 import IconArrowUp from './assets/IconArrowUp'
 import IconArrowDown from './assets/IconArrowDown'
-
+import sound from './assets/sound.wav'
 
 function App() {
   const pomodoro = 'pomodoro'
   const longBreak = 'long break'
   const shortBreak = 'short break'
-
+  const audio = new Audio(sound)
+  
   const modal = useRef()
   const [time, setTime] = useState([{
     type: pomodoro,
-    duration: 25,
+    duration: 1,
+    seconds: 1,
     isActive: true
   },{
     type: shortBreak,
-    duration: 5,
+    duration: 1,
+    seconds: 59,
     isActive: false
   },{
     type: longBreak,
     duration: 15,
+    seconds: 59,
     isActive: false
   }])
-  const [displayedTime, setDisplayedTime] = useState()
   const [activeTap, setActiveTap] = useState(pomodoro)
   const [activeFont, setActiveFont] = useState('monospace')
   const [activeColor, setActiveColor] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
-  const activeTime = tempTime.find(item => item.isActive)
-
+  const activeItem = time.find(item => item.isActive)
+  
   useEffect(()=>{
-    const activeTime = time.find(item => item.isActive)
-    if (activeTime) {
-      setDisplayedTime(activeTime.duration)
-    }
-    console.log(activeTime)
-
-    if(isTimeRunning & displayedTime > 1){
-      setTimeout(()=>{
-        setTime(prev => prev.map(item=>{
-          if(item.isActive){
-            return {
-              ...item, duration: item.duration - 1
-            }
+    if (isTimeRunning) {
+      const timer = setInterval(() => {
+        setTime(prev => prev.map(item => {
+          if (item.isActive) {
+            const seconds = item.seconds === 0 ? 59 : item.seconds - 1
+            const duration = seconds === 59 ? item.duration - 1 : item.duration
+            // const isActive = duration === 0 && seconds === 0 ? false : item.isActive
+            return { ...item, seconds, duration}
           }
           return item
         }))
-      },1000)
-    } else if(displayedTime === 0){
-      setIsTimeRunning(false)
-    }
+  
+        if (activeItem.duration === 0 && activeItem.seconds === 1) {
+          clearInterval(timer)
+          setIsTimeRunning(false)
+        
+  
+          if(audio.currentTime = 0){
+            audio.play()
+          }else{
+            audio.currentTime = 0
+          }
+        }
+      }, 1000)
+  
+      return () => clearInterval(timer)
+    }    
   },[isTimeRunning, time])
 
   function increaseTime(type){
@@ -78,57 +88,57 @@ function App() {
   }
 
   function selectTap(e){
-    // if(!e.target.closest('.nav__item')) return
+    if(!e.target.closest('.nav__item')) return
     const selectedType = e.target.dataset.name
     setActiveTap(selectedType)
     setTime(prev => prev.map(item =>{
       if(item.type === selectedType){
         return{
-          ...item, isActive: item.isActive = true
+          ...item, 
+          isActive: item.isActive = true,
+          duration: tempTime.find(t => t.type === item.type).duration,
+          seconds: 59
         }
       }else{
         return{
-          ...item, isActive: item.isActive = false
+          ...item, isActive: item.isActive = false,
         }
       }
     }))
     // pauses timer 
     setIsTimeRunning(false)
-
   }
-  
+
   function startPause(){
     setIsTimeRunning(prev => !prev)
   }
-
+  
   function changeFont(e){
-    
+    if(!e.target.closest('.fontButton')) return
+    setActiveFont(e.target.dataset.font)
   }
 
   function changeColor(e){
     if(!e.target.closest('.clrButton')) return
     setActiveColor(e.target.dataset.color)
   }
- 
+  
   function applyChanges(){
     modal.current.close()
-    setTime(tempTime) 
-    isTimeRunning(false)
-    setTime(prev => prev.map(item =>{
-      return{
-        ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
-      }
-    }))
+    setIsTimeRunning(false)
+    setTime(prevTime => {
+      return prevTime.map(item => {
+        // const isActive = item.type === activeTap
+        return { ...item, duration: tempTime.find(t => t.type === item.type).duration, isActive}
+      })
+    })
+    // setTime(prev => prev.map(item =>{
+    //   return{
+    //     ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
+    //   }
+    // }))
   }
-
-  function reset(){
-    const activeTime = time.find(item => item.isActive)
-    if (activeTime) {
-      setDisplayedTime(activeTime.duration)
-    }
-    isTimeRunning(false)
-  }
-
+console.log(time)
   return (
     <div className='wrapper'>
     <header className='header'>
@@ -136,15 +146,16 @@ function App() {
 
       <nav>
         <ul className='nav__menu' onClick={selectTap}>
-          <li className={`nav__item' ${activeTap === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
-          <li className={`'nav__item' ${activeTap === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
-          <li className={`'nav__item' ${activeTap === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
+          <span className=''></span>
+          <li className={`nav__item ${activeTap === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
+          <li className={`nav__item ${activeTap === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
+          <li className={`nav__item ${activeTap === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
         </ul>
       </nav>
     </header>
 
     <main className='main' onClick={startPause}>
-      <time className='main__time'>{displayedTime}</time>
+      <time className='main__time'>{activeItem.duration}:{time.filter(item=>item.isActive).map(item=>item.seconds < 10 ? `0${item.seconds}` : item.seconds)}</time>
       <p className='main__timeStatus'>{isTimeRunning ? 'PAUSE' : 'RESTART'}</p>
       {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
         <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />
@@ -228,7 +239,6 @@ function App() {
 
       <button className='apply' onClick={applyChanges}>Apply</button>
     </dialog>
-    <button onClick={reset}>Reset</button>
     </div>
   )
 }

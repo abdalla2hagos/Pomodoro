@@ -7,31 +7,30 @@ import IconArrowDown from './assets/IconArrowDown'
 import sound from './assets/sound.wav'
 
 function App() {
-  const pomodoro = 'pomodoro'
-  const longBreak = 'long break'
-  const shortBreak = 'short break'
   const audio = new Audio(sound)
   
   const modal = useRef()
   const [time, setTime] = useState([{
-    type: pomodoro,
+    type: 'pomodoro',
     duration: 1,
-    seconds: 1,
+    seconds: 0,
     isActive: true
   },{
-    type: shortBreak,
-    duration: 1,
-    seconds: 59,
+    type: 'short break',
+    duration: 5,
+    seconds: 0,
     isActive: false
   },{
-    type: longBreak,
+    type: 'long break',
     duration: 15,
-    seconds: 59,
+    seconds: 0,
     isActive: false
   }])
-  const [activeTap, setActiveTap] = useState(pomodoro)
+  const [activeTap, setActiveTap] = useState('pomodoro')
   const [activeFont, setActiveFont] = useState('monospace')
+  const [activeFontSelected, setActiveFontSelected] = useState('monospace')
   const [activeColor, setActiveColor] = useState('orange')
+  const [activeColorSelected, setActiveColorSelected] = useState('orange')
   const [tempTime, setTempTime] = useState(time)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
   const activeItem = time.find(item => item.isActive)
@@ -50,15 +49,16 @@ function App() {
         }))
   
         if (activeItem.duration === 0 && activeItem.seconds === 1) {
-          clearInterval(timer)
+          // clearInterval(timer)
           setIsTimeRunning(false)
-        
+          // audio.play()
+          // audio.loop = true
   
-          if(audio.currentTime = 0){
-            audio.play()
-          }else{
-            audio.currentTime = 0
-          }
+          // if(audio.currentTime = 0){
+          //   audio.play()
+          // }else{
+          //   audio.currentTime = 0
+          // }
         }
       }, 1000)
   
@@ -97,7 +97,7 @@ function App() {
           ...item, 
           isActive: item.isActive = true,
           duration: tempTime.find(t => t.type === item.type).duration,
-          seconds: 59
+          seconds: 0
         }
       }else{
         return{
@@ -111,6 +111,14 @@ function App() {
 
   function startPause(){
     setIsTimeRunning(prev => !prev)
+
+    if (activeItem.duration === 0 && activeItem.seconds === 0){
+      setTime(prevTime => {
+        return prevTime.map(item => {
+          return { ...item, duration: tempTime.find(t => t.type === item.type).duration}
+        })
+      })
+    } 
   }
   
   function changeFont(e){
@@ -126,40 +134,53 @@ function App() {
   function applyChanges(){
     modal.current.close()
     setIsTimeRunning(false)
-    setTime(prevTime => {
-      return prevTime.map(item => {
+    setTime(prevTime => prevTime.map(item => {
         // const isActive = item.type === activeTap
-        return { ...item, duration: tempTime.find(t => t.type === item.type).duration, isActive}
+        return { ...item, duration: tempTime.find(t => t.type === item.type).duration, seconds: 0}
       })
-    })
-    // setTime(prev => prev.map(item =>{
-    //   return{
-    //     ...item, duration: item.duration = tempTime.filter(item=>item.isActive).map(item=>item.duration)
-    //   }
-    // }))
+    )
+    let color
+    let font
+    if(activeColor === 'orange'){
+      color = 'orange'
+    }if(activeColor === 'blue'){
+      color = 'blue'
+    }if(activeColor === 'purple'){
+      color = 'purple'
+    }
+
+    if(activeFont === 'monospace'){
+      font = 'monospace'
+    }if(activeFont === 'sans-serif'){
+      font = 'sans-serif'
+    }if(activeFont === 'serif'){
+      font = 'serif'
+    }
+    setActiveColorSelected(color)
+    setActiveFontSelected(font)
   }
-console.log(time)
+
   return (
     <div className='wrapper'>
-    <header className='header'>
+    <header className={`header ${activeFontSelected}`}>
       <h1 className='logo'><Logo /></h1>
 
       <nav>
         <ul className='nav__menu' onClick={selectTap}>
           <span className=''></span>
-          <li className={`nav__item ${activeTap === pomodoro ? 'isActiveTab' : ''}`} data-name = 'pomodoro'>pomodoro</li>
-          <li className={`nav__item ${activeTap === shortBreak ? 'isActiveTab' : ''}`} data-name = 'short break'>short break</li>
-          <li className={`nav__item ${activeTap === longBreak ? 'isActiveTab' : ''}`} data-name = 'long break'>long break</li>
+          <li className={`nav__item ${activeTap === 'pomodoro' ? `isActiveTab ${activeColorSelected} ` : ''}`} data-name = 'pomodoro'>pomodoro</li>
+          <li className={`nav__item ${activeTap === 'short break' ? `isActiveTab ${activeColorSelected}` : ''}`} data-name = 'short break'>short break</li>
+          <li className={`nav__item ${activeTap === 'long break' ? `isActiveTab ${activeColorSelected}` : ''}`} data-name = 'long break'>long break</li>
         </ul>
       </nav>
     </header>
 
-    <main className='main' onClick={startPause}>
-      <time className='main__time'>{activeItem.duration}:{time.filter(item=>item.isActive).map(item=>item.seconds < 10 ? `0${item.seconds}` : item.seconds)}</time>
+    <main className={`main ${activeFontSelected}`} onClick={startPause}>
+      <time className='main__time'>{activeItem.duration < 10 ? `0${activeItem.duration}` : activeItem.duration}:{time.filter(item=>item.isActive).map(item=>item.seconds < 10 ? `0${item.seconds}` : item.seconds)}</time>
       <p className='main__timeStatus'>{isTimeRunning ? 'PAUSE' : 'RESTART'}</p>
-      {/* <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
-        <circle pathLength="100" cx="100" cy="60" r="50" stroke="black" class="circle" />
-      </svg> */}
+      <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
+        <circle pathLength="100" cx="100" cy="60" r="50" stroke="pink" class="circle" />
+      </svg>
     </main>
 
     <footer className='footer' onClick={()=> modal.current.showModal()}>
@@ -183,8 +204,8 @@ console.log(time)
               <p>{tempTime[0].duration}</p>
 
               <div className='arrowContainer'>
-                <IconArrowUp increaseTime={()=> increaseTime(pomodoro)}/>
-                <IconArrowDown decreaseTime={()=> decreaseTime(pomodoro)}/>
+                <IconArrowUp increaseTime={()=> increaseTime('pomodoro')}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime('pomodoro')}/>
               </div>
             </div>
           </div>
@@ -196,8 +217,8 @@ console.log(time)
               <p>{tempTime[1].duration}</p>
 
               <div>
-                <IconArrowUp increaseTime={()=> increaseTime(shortBreak)}/>
-                <IconArrowDown decreaseTime={()=> decreaseTime(shortBreak)}/>
+                <IconArrowUp increaseTime={()=> increaseTime('short break')}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime('short break')}/>
               </div>
             </div>
           </div>
@@ -209,8 +230,8 @@ console.log(time)
               <p>{tempTime[2].duration}</p>
 
               <div>
-                <IconArrowUp increaseTime={()=> increaseTime(longBreak)}/>
-                <IconArrowDown decreaseTime={()=> decreaseTime(longBreak)}/>
+                <IconArrowUp increaseTime={()=> increaseTime('long break')}/>
+                <IconArrowDown decreaseTime={()=> decreaseTime('long break')}/>
               </div>
             </div>
           </div>

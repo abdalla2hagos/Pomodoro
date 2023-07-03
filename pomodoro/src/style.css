@@ -36,9 +36,14 @@ body{
   text-align: center;
 }
 
-.main,
-.header{
+.monospace{
   font-family: var(--ff-s);
+}
+.sans-serif{
+  font-family: var(--ff-k)
+}
+.serif{
+  font-family: var(--ff-r);
 }
 
 button{
@@ -77,13 +82,24 @@ button{
   isolation: isolate;
 }
 
-.isActiveTab::before{
+.orange::before,
+.blue::before,
+.purple::before{
   content: '';
   position: absolute;
   z-index: -1;
   inset: -0.8rem -0.5rem;
-  background-color: hsl(var(--clr-blue));
   border-radius: 100rem;
+}
+
+.purple::before{
+  background-color: hsl(var(--clr-purple));
+}
+.blue::before{
+  background-color: hsl(var(--clr-blue));
+}
+.orange::before{
+  background-color: hsl(var(--clr-orange));
 }
 /* header end */
 /* main start */
@@ -119,7 +135,7 @@ button{
 
 .main__timeStatus{
   position: absolute;
-  transform: translate(-50%, 1.8rem);
+  transform: translate(-45%, 1.8rem);
   margin-block-start: 0.5rem;
   letter-spacing: 0.5ch;
   font-size: var(--fs-1-5);
@@ -130,13 +146,13 @@ button{
   inset: 0; 
   height: 100%;
   width: 100%;
-  outline: 1px solid red;
+  /* outline: 1px solid red; */
 }
 
 .circle{
-  /* fill: transparent; */
-  stroke-width: 5px;
-  outline: 1px solid red;
+  fill: transparent;
+  stroke-width: 50px;
+  outline: 1px solid pink;
   stroke-dasharray: 100px;
   stroke-dashoffset: 0px;
 }
@@ -364,7 +380,7 @@ button{
 
 @media(min-width: 900px){
   .dialog{
-    width: 30%;
+    width: 30rem;
   }
 
   .flex--between{
@@ -399,5 +415,9 @@ button{
     bottom: 27%;
   }
 }
+
+
+
+
 
 

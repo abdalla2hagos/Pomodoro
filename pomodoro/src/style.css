@@ -103,8 +103,7 @@ button{
 }
 /* header end */
 /* main start */
-.main,
-.circleContainer{
+.main{
   padding: 10rem 10rem;
   border-radius: 50%;
 }
@@ -147,14 +146,14 @@ button{
   height: 100%;
   width: 100%;
   /* outline: 1px solid red; */
+  /* transition: 500ms stroke-dashoffset; */
 }
 
 .circle{
   fill: transparent;
-  stroke-width: 50px;
-  outline: 1px solid pink;
+  stroke-width: 10px;
+  /* outline: 1px solid pink; */
   stroke-dasharray: 100px;
-  stroke-dashoffset: 0px;
 }
 /* main end */
 /* footer start */

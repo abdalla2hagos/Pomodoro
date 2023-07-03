@@ -14,16 +14,19 @@ function App() {
     type: 'pomodoro',
     duration: 1,
     seconds: 0,
+    progress: 0,
     isActive: true
   },{
     type: 'short break',
     duration: 5,
     seconds: 0,
+    progress: 0,
     isActive: false
   },{
     type: 'long break',
     duration: 15,
     seconds: 0,
+    progress: 0,
     isActive: false
   }])
   const [activeTap, setActiveTap] = useState('pomodoro')
@@ -31,6 +34,7 @@ function App() {
   const [activeFontSelected, setActiveFontSelected] = useState('monospace')
   const [activeColor, setActiveColor] = useState('orange')
   const [activeColorSelected, setActiveColorSelected] = useState('orange')
+  const [circleColor, setCircleColor] = useState('hsl(var(--clr-orange))')
   const [tempTime, setTempTime] = useState(time)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
   const activeItem = time.find(item => item.isActive)
@@ -43,7 +47,9 @@ function App() {
             const seconds = item.seconds === 0 ? 59 : item.seconds - 1
             const duration = seconds === 59 ? item.duration - 1 : item.duration
             // const isActive = duration === 0 && seconds === 0 ? false : item.isActive
-            return { ...item, seconds, duration}
+            // const progress = ((duration * 60 + seconds) / (item.duration * 60)) * 100
+            const progress = (item.duration * 60 - (duration * 60 + seconds)) / (item.duration * 60) * 100
+            return { ...item, seconds, duration, progress}
           }
           return item
         }))
@@ -97,7 +103,8 @@ function App() {
           ...item, 
           isActive: item.isActive = true,
           duration: tempTime.find(t => t.type === item.type).duration,
-          seconds: 0
+          seconds: 0,
+          progress: 0
         }
       }else{
         return{
@@ -140,13 +147,17 @@ function App() {
       })
     )
     let color
+    let circle
     let font
     if(activeColor === 'orange'){
       color = 'orange'
+      circle = 'hsl(var(--clr-orange))'
     }if(activeColor === 'blue'){
       color = 'blue'
+      circle = 'hsl(var(--clr-blue))'
     }if(activeColor === 'purple'){
       color = 'purple'
+      circle = 'hsl(var(--clr-purple))'
     }
 
     if(activeFont === 'monospace'){
@@ -157,6 +168,7 @@ function App() {
       font = 'serif'
     }
     setActiveColorSelected(color)
+    setCircleColor(circle)
     setActiveFontSelected(font)
   }
 
@@ -179,7 +191,7 @@ function App() {
       <time className='main__time'>{activeItem.duration < 10 ? `0${activeItem.duration}` : activeItem.duration}:{time.filter(item=>item.isActive).map(item=>item.seconds < 10 ? `0${item.seconds}` : item.seconds)}</time>
       <p className='main__timeStatus'>{isTimeRunning ? 'PAUSE' : 'RESTART'}</p>
       <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
-        <circle pathLength="100" cx="100" cy="60" r="50" stroke="pink" class="circle" />
+        <circle pathLength="100" cx="160" cy="160" r="140" stroke={circleColor} class="circle" stroke-linecap="round" stroke-dashoffset= {100 - activeItem.progress}/>
       </svg>
     </main>
 

@@ -7,26 +7,22 @@ import IconArrowDown from './assets/IconArrowDown'
 import sound from './assets/sound.wav'
 
 function App() {
-  const audio = new Audio(sound)
-  
   const modal = useRef()
+  const audioRef = useRef(new Audio(sound))
   const [time, setTime] = useState([{
     type: 'pomodoro',
-    duration: 1,
+    duration: 25,
     seconds: 0,
-    progress: 0,
     isActive: true
   },{
     type: 'short break',
     duration: 5,
     seconds: 0,
-    progress: 0,
     isActive: false
   },{
     type: 'long break',
     duration: 15,
     seconds: 0,
-    progress: 0,
     isActive: false
   }])
   const [activeTap, setActiveTap] = useState('pomodoro')
@@ -40,31 +36,25 @@ function App() {
   const activeItem = time.find(item => item.isActive)
   
   useEffect(()=>{
+    const audio = audioRef.current
     if (isTimeRunning) {
       const timer = setInterval(() => {
         setTime(prev => prev.map(item => {
           if (item.isActive) {
             const seconds = item.seconds === 0 ? 59 : item.seconds - 1
             const duration = seconds === 59 ? item.duration - 1 : item.duration
-            // const isActive = duration === 0 && seconds === 0 ? false : item.isActive
-            // const progress = ((duration * 60 + seconds) / (item.duration * 60)) * 100
-            const progress = (item.duration * 60 - (duration * 60 + seconds)) / (item.duration * 60) * 100
-            return { ...item, seconds, duration, progress}
+            return { ...item, seconds, duration}
           }
           return item
         }))
   
         if (activeItem.duration === 0 && activeItem.seconds === 1) {
-          // clearInterval(timer)
           setIsTimeRunning(false)
-          // audio.play()
-          // audio.loop = true
-  
-          // if(audio.currentTime = 0){
-          //   audio.play()
-          // }else{
-          //   audio.currentTime = 0
-          // }
+          audio.loop = true
+          audio.play()
+        }else{
+          audio.pause() // Pause the audio when time is not running
+          audio.currentTime = 0
         }
       }, 1000)
   
@@ -103,8 +93,7 @@ function App() {
           ...item, 
           isActive: item.isActive = true,
           duration: tempTime.find(t => t.type === item.type).duration,
-          seconds: 0,
-          progress: 0
+          seconds: 0
         }
       }else{
         return{
@@ -142,7 +131,6 @@ function App() {
     modal.current.close()
     setIsTimeRunning(false)
     setTime(prevTime => prevTime.map(item => {
-        // const isActive = item.type === activeTap
         return { ...item, duration: tempTime.find(t => t.type === item.type).duration, seconds: 0}
       })
     )
@@ -172,6 +160,16 @@ function App() {
     setActiveFontSelected(font)
   }
 
+  function calculateStrokeDashOffset(){
+    if (activeItem.duration === 0 && activeItem.seconds === 0) {
+      return 0
+    }
+
+    const totalSeconds = activeItem.duration * 60 + activeItem.seconds
+    const percentElapsed = (totalSeconds / (tempTime.find(t => t.type === activeItem.type).duration * 60)) * 100
+    return 100 - percentElapsed
+  }
+
   return (
     <div className='wrapper'>
     <header className={`header ${activeFontSelected}`}>
@@ -191,7 +189,7 @@ function App() {
       <time className='main__time'>{activeItem.duration < 10 ? `0${activeItem.duration}` : activeItem.duration}:{time.filter(item=>item.isActive).map(item=>item.seconds < 10 ? `0${item.seconds}` : item.seconds)}</time>
       <p className='main__timeStatus'>{isTimeRunning ? 'PAUSE' : 'RESTART'}</p>
       <svg className='circleContainer' xmlns="http://www.w3.org/2000/svg">
-        <circle pathLength="100" cx="160" cy="160" r="140" stroke={circleColor} class="circle" stroke-linecap="round" stroke-dashoffset= {100 - activeItem.progress}/>
+        <circle pathLength="100" cx="160" cy="160" r="140" stroke={circleColor} class="circle" stroke-linecap="round" stroke-dashoffset= {calculateStrokeDashOffset()}/>
       </svg>
     </main>
 

@@ -94,6 +94,7 @@ button{
 
 .purple::before{
   background-color: hsl(var(--clr-purple));
+  transform: translateX(50%);
 }
 .blue::before{
   background-color: hsl(var(--clr-blue));
@@ -146,7 +147,7 @@ button{
   height: 100%;
   width: 100%;
   /* outline: 1px solid red; */
-  /* transition: 500ms stroke-dashoffset; */
+  transition:  all 500ms ease-in;
 }
 
 .circle{
